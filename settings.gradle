@@ -29,3 +29,4 @@ include ':lib_player'
 include ':lib_saver'
 
 include ':demo'
+include ':lib_common'

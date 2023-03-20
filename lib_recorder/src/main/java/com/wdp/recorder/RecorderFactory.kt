@@ -20,5 +20,15 @@ object RecorderFactory {
         )
     }
 
-    fun newMediaRecorder(): IRecorder = TODO()
+    fun newMediaRecorder(
+        audioSource: Int,
+        sampleRateInHz: Int,
+        channelConfig: Int,
+        audioFormat: Int,
+        outputPath: String
+    ): IRecorder {
+        return AndroidMediaRecorder(
+            audioSource, sampleRateInHz, channelConfig, audioFormat, outputPath
+        )
+    }
 }

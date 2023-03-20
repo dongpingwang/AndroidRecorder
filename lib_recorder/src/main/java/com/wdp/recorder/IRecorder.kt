@@ -14,6 +14,9 @@ interface IRecorder {
 
     fun stop(): Boolean
 
+    fun pause(): Boolean
+    fun resume(): Boolean
+
     fun release(): Boolean
 
     fun addDataReadListener(dataListener: IDataReadListener): Boolean

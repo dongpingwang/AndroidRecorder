@@ -19,6 +19,14 @@ class JniRecorder:IRecorder {
         TODO("Not yet implemented")
     }
 
+    override fun pause(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun resume(): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun release(): Boolean {
         TODO("Not yet implemented")
     }

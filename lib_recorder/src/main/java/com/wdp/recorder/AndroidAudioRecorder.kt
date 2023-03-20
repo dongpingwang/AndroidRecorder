@@ -28,13 +28,13 @@ internal class AndroidAudioRecorder(
         private const val LEN_READ = 1024 // 1KB
     }
 
-    private var audioRecorder: AudioRecord? = null
+    private var recorder: AudioRecord? = null
     private val dataListeners = mutableListOf<IDataReadListener>()
     private val readBuffer by lazy { ByteBuffer.allocate(LEN_READ) }
 
     @SuppressLint("MissingPermission")
     override fun init(): Boolean {
-        if (audioRecorder == null) {
+        if (recorder == null) {
             return kotlin.runCatching {
                 AudioRecord(
                     audioSource,
@@ -44,8 +44,8 @@ internal class AndroidAudioRecorder(
                     bufferSizeInBytes
                 )
             }.also {
-                audioRecorder = it.getOrNull()
-                if (audioRecorder?.state == STATE_INITIALIZED) {
+                recorder = it.getOrNull()
+                if (recorder?.state == STATE_INITIALIZED) {
                     Thread(this, NAME_THREAD_READ).start()
                 }
                 it.exceptionOrNull()?.printStackTrace()
@@ -56,21 +56,23 @@ internal class AndroidAudioRecorder(
 
     override fun start(): Boolean {
         return kotlin.runCatching {
-            audioRecorder?.startRecording() ?: throw NullPointerException()
+            recorder?.startRecording() ?: throw NullPointerException()
         }.also { it.exceptionOrNull()?.printStackTrace() }.isSuccess
     }
 
     override fun stop(): Boolean {
         return kotlin.runCatching {
-            audioRecorder?.stop() ?: throw NullPointerException()
+            recorder?.stop() ?: throw NullPointerException()
         }.also { it.exceptionOrNull()?.printStackTrace() }.isSuccess
     }
 
+    override fun pause(): Boolean = stop()
+    override fun resume(): Boolean = start()
     override fun release(): Boolean {
         return kotlin.runCatching {
-            audioRecorder?.release() ?: throw NullPointerException()
+            recorder?.release() ?: throw NullPointerException()
         }.also {
-            audioRecorder = null
+            recorder = null
             it.exceptionOrNull()?.printStackTrace()
         }.isSuccess
     }
@@ -91,10 +93,10 @@ internal class AndroidAudioRecorder(
         Log.d(TAG, "read run!")
         val ret = 0
         while (ret >= 0) {
-            if (audioRecorder?.recordingState == RECORDSTATE_RECORDING) {
+            if (recorder?.recordingState == RECORDSTATE_RECORDING) {
                 readBuffer.clear()
                 val len = kotlin.runCatching {
-                    audioRecorder?.read(readBuffer.array(), 0, readBuffer.remaining())
+                    recorder?.read(readBuffer.array(), 0, readBuffer.remaining())
                 }.also {
                     it.exceptionOrNull()?.printStackTrace()
                 }.getOrNull() ?: 0

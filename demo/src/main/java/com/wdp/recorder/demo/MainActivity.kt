@@ -33,12 +33,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val bufferSizeInBytes =
         AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat)
     private val recorder by lazy {
-        RecorderFactory.newAudioRecorder(
+        RecorderFactory.newMediaRecorder(
             audioSource,
             sampleRateInHz,
             channelConfig,
             audioFormat,
-            bufferSizeInBytes
+            saver.path
         )
     }
     private val saver by lazy { PcmSaver() }
@@ -50,13 +50,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Utils.requestPermissions(this)
-        btnStartRecorder = findViewById(R.id.btn_start_recorder)
+             btnStartRecorder = findViewById(R.id.btn_start_recorder)
         btnStopRecorder = findViewById(R.id.btn_stop_recorder)
         tvRecorderState = findViewById(R.id.tv_recorder_state)
         tvFilePath = findViewById(R.id.tv_recorder_path)
 
-        recorder.addDataReadListener(object :IDataReadListener{
+        recorder.addDataReadListener(object : IDataReadListener {
             override fun onRead(data: ByteArray) {
                 saver.saveData(data)
             }
@@ -74,19 +73,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         if (v == btnStartRecorder) {
             // todo 耗时
-            tvRecorderState.text = if (recorder.start()) "录音中" else "开始录音失败"
+            tvRecorderState.text = if (recorder.resume()) "录音中" else "开始录音失败"
         } else if (v == btnStopRecorder) {
             // todo 耗时
-            tvRecorderState.text = if (recorder.stop()) "结束录音" else "结束录音失败"
+            tvRecorderState.text = if (recorder.pause()) "结束录音" else "结束录音失败"
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.d(TAG, "onRequestPermissionsResult: $requestCode --> $permissions --> $grantResults")
     }
 }

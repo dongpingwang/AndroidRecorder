@@ -44,4 +44,5 @@ dependencies {
 
     implementation project(':lib_recorder')
     implementation project(':lib_saver')
+    implementation project(':lib_common')
 }

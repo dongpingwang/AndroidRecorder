@@ -1,8 +1,8 @@
 package com.wdp.saver
 
-import android.annotation.SuppressLint
 import android.text.format.DateFormat
 import android.util.Log
+import com.wdp.common.XUtils
 import java.io.Closeable
 import java.io.File
 import java.io.FileOutputStream
@@ -15,16 +15,17 @@ import java.util.concurrent.Executors
  * 说明：
  * 版本：1.0.0
  */
-class PcmSaver(val path: String = defaultFile) : Closeable {
+class PcmSaver(val path: String = getDefaultSaveFile()) : Closeable {
 
     private val executor by lazy { Executors.newCachedThreadPool() }
 
-    companion object {
-        private const val TAG = "RecorderSaver"
-
-        @SuppressLint("SdCardPath")
-        private val defaultFile =
-            "/mnt/sdcard/wdp_${DateFormat.format("yyyy-mm-dd-HH-mm-ss", Date())}.pcm"
+    private companion object {
+        const val TAG = "PcmSaver"
+        fun getDefaultSaveFile(): String {
+            val dir = XUtils.getContext().externalCacheDir?.path
+            val name = "${DateFormat.format("yyyy-mm-dd-HH-mm-ss", Date())}.pcm"
+            return dir + File.separator + name
+        }
     }
 
     private var fos: FileOutputStream? = null
