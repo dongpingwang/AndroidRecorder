@@ -1,8 +1,8 @@
 package com.wdp.saver
 
+import android.content.Context
 import android.text.format.DateFormat
 import android.util.Log
-import com.wdp.common.XUtils
 import java.io.Closeable
 import java.io.File
 import java.io.FileOutputStream
@@ -15,17 +15,22 @@ import java.util.concurrent.Executors
  * 说明：
  * 版本：1.0.0
  */
-class PcmSaver(val path: String = getDefaultSaveFile()) : Closeable {
+
+fun getDefaultSaveFile(context: Context, fileExtName: String): String {
+    val dir = context.externalCacheDir?.path
+    val name = "${DateFormat.format("yyyy-MM-dd-HH-mm-ss", Date())}.$fileExtName"
+    return dir + File.separator + name
+}
+
+class PcmSaver(
+    private val context: Context,
+    val path: String = getDefaultSaveFile(context, "pcm")
+) : Closeable {
 
     private val executor by lazy { Executors.newCachedThreadPool() }
 
     private companion object {
         const val TAG = "PcmSaver"
-        fun getDefaultSaveFile(): String {
-            val dir = XUtils.getContext().externalCacheDir?.path
-            val name = "${DateFormat.format("yyyy-mm-dd-HH-mm-ss", Date())}.pcm"
-            return dir + File.separator + name
-        }
     }
 
     private var fos: FileOutputStream? = null
@@ -39,8 +44,8 @@ class PcmSaver(val path: String = getDefaultSaveFile()) : Closeable {
                     file.delete()
                     Log.i(TAG, "delete old file")
                 }
-                val result = file.createNewFile()
-                Log.i(TAG, "created $path --> $result")
+//                val result = file.createNewFile()
+//                Log.i(TAG, "created $path --> $result")
             }
         }.exceptionOrNull()?.printStackTrace()
     }

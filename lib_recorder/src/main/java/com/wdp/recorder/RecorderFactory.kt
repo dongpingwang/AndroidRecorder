@@ -25,10 +25,11 @@ object RecorderFactory {
         sampleRateInHz: Int,
         channelConfig: Int,
         audioFormat: Int,
+        audioEncoder: Int,
         outputPath: String
     ): IRecorder {
         return AndroidMediaRecorder(
-            audioSource, sampleRateInHz, channelConfig, audioFormat, outputPath
+            audioSource, sampleRateInHz, channelConfig, audioFormat, audioEncoder, outputPath
         )
     }
 }

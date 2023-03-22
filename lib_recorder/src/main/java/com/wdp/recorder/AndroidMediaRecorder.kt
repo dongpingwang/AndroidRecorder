@@ -14,7 +14,8 @@ internal class AndroidMediaRecorder(
     private val sampleRateInHz: Int,
     private val channelConfig: Int,
     private val audioFormat: Int,
-    private val outputPath: String
+    private val audioEncoder: Int,
+    private val outputPath: String,
 ) : IRecorder, MediaRecorder.OnErrorListener, MediaRecorder.OnInfoListener {
     companion object {
         private const val TAG = "AndroidMediaRecorder"
@@ -26,10 +27,10 @@ internal class AndroidMediaRecorder(
             return kotlin.runCatching {
                 recorder = MediaRecorder().apply {
                     setAudioSource(audioSource)
-                    setOutputFormat(audioFormat)
-                    setAudioChannels(channelConfig)
                     setAudioSamplingRate(sampleRateInHz)
-                    setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                    setAudioChannels(channelConfig)
+                    setOutputFormat(audioFormat)
+                    setAudioEncoder(audioEncoder)
                     setOutputFile(outputPath)
                     setOnErrorListener(this@AndroidMediaRecorder)
                     setOnInfoListener(this@AndroidMediaRecorder)

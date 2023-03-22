@@ -13,5 +13,6 @@ abstract class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         XUtils.init(this)
+        Logger.setConfig(LogConfig(prefix = "wdp_"))
     }
 }

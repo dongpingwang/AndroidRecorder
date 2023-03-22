@@ -8,7 +8,14 @@ package com.wdp.player
  */
 object PlayerFactory {
 
-    fun newAudioTrack(): IPlayer = TODO()
-
     fun newMediaPlayer(): IPlayer = TODO()
+
+    fun newAudioTrack(
+        sampleRateInHz: Int,
+        channelConfig: Int,
+        audioFormat: Int,
+        bufferSizeInBytes: Int
+    ): IPlayer {
+        return AndroidAudioTrack(sampleRateInHz, channelConfig, audioFormat, bufferSizeInBytes)
+    }
 }
