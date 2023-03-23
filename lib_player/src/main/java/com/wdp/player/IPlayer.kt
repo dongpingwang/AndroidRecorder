@@ -19,4 +19,11 @@ interface IPlayer {
     fun stop(): Boolean
 
     fun release(): Boolean
+
+    fun registerOnPlayerCompleteListener(listener: OnPlayerCompleteListener): Boolean
+    fun unregisterOnPlayerCompleteListener(listener: OnPlayerCompleteListener): Boolean
+}
+
+interface OnPlayerCompleteListener {
+    fun onComplete()
 }

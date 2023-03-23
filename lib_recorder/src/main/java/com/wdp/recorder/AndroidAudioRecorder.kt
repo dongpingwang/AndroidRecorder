@@ -29,7 +29,7 @@ internal class AndroidAudioRecorder(
     }
 
     private var recorder: AudioRecord? = null
-    private val dataListeners = mutableListOf<IDataReadListener>()
+    private val dataListeners = mutableListOf<OnDataReadListener>()
     private val readBuffer by lazy { ByteBuffer.allocate(LEN_READ) }
 
     @SuppressLint("MissingPermission")
@@ -77,13 +77,13 @@ internal class AndroidAudioRecorder(
         }.isSuccess
     }
 
-    override fun addDataReadListener(dataListener: IDataReadListener): Boolean {
+    override fun addOnDataReadListener(dataListener: OnDataReadListener): Boolean {
         synchronized(dataListener) {
             return dataListeners.contains(dataListener) || dataListeners.add(dataListener)
         }
     }
 
-    override fun removeDataReadListener(dataListener: IDataReadListener): Boolean {
+    override fun removeOnDataReadListener(dataListener: OnDataReadListener): Boolean {
         synchronized(dataListener) {
             return dataListeners.contains(dataListener) && dataListeners.remove(dataListener)
         }

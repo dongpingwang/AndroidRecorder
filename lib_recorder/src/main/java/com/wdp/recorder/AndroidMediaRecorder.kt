@@ -75,8 +75,8 @@ internal class AndroidMediaRecorder(
         return stop()
     }
 
-    override fun addDataReadListener(dataListener: IDataReadListener): Boolean = false
-    override fun removeDataReadListener(dataListener: IDataReadListener): Boolean = false
+    override fun addOnDataReadListener(dataListener: OnDataReadListener): Boolean = false
+    override fun removeOnDataReadListener(dataListener: OnDataReadListener): Boolean = false
     override fun onError(mr: MediaRecorder?, what: Int, extra: Int) {
         Log.d(TAG, ">> onError:[what=$what, extra=$extra]")
     }

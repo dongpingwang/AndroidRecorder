@@ -31,11 +31,11 @@ class JniRecorder:IRecorder {
         TODO("Not yet implemented")
     }
 
-    override fun addDataReadListener(dataListener: IDataReadListener): Boolean {
+    override fun addOnDataReadListener(dataListener: OnDataReadListener): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun removeDataReadListener(dataListener: IDataReadListener): Boolean {
+    override fun removeOnDataReadListener(dataListener: OnDataReadListener): Boolean {
         TODO("Not yet implemented")
     }
 }

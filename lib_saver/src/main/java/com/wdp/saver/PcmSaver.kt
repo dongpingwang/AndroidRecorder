@@ -1,12 +1,10 @@
 package com.wdp.saver
 
 import android.content.Context
-import android.text.format.DateFormat
 import android.util.Log
 import java.io.Closeable
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
 import java.util.concurrent.Executors
 
 /**
@@ -16,11 +14,6 @@ import java.util.concurrent.Executors
  * 版本：1.0.0
  */
 
-fun getDefaultSaveFile(context: Context, fileExtName: String): String {
-    val dir = context.externalCacheDir?.path
-    val name = "${DateFormat.format("yyyy-MM-dd-HH-mm-ss", Date())}.$fileExtName"
-    return dir + File.separator + name
-}
 
 class PcmSaver(
     private val context: Context,

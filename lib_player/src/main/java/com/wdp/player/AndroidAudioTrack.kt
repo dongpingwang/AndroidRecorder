@@ -28,6 +28,7 @@ class AndroidAudioTrack(
     }
 
     private var player: AudioTrack? = null
+    private val playerCompleteListeners = mutableListOf<OnPlayerCompleteListener>()
     private val readBuffer by lazy { ByteBuffer.allocate(LEN_READ) }
     private var fis: FileInputStream? = null
     override fun init(): Boolean {
@@ -89,6 +90,18 @@ class AndroidAudioTrack(
         }.also { it.exceptionOrNull()?.printStackTrace() }.isSuccess
     }
 
+    override fun registerOnPlayerCompleteListener(listener: OnPlayerCompleteListener): Boolean {
+        synchronized(playerCompleteListeners) {
+            return playerCompleteListeners.contains(listener) || playerCompleteListeners.add(listener)
+        }
+    }
+
+    override fun unregisterOnPlayerCompleteListener(listener: OnPlayerCompleteListener): Boolean {
+        synchronized(playerCompleteListeners) {
+            return playerCompleteListeners.contains(listener) && playerCompleteListeners.remove(listener)
+        }
+    }
+
     override fun run() {
         Log.d(TAG, "read run!")
         var ret = 0
@@ -102,6 +115,8 @@ class AndroidAudioTrack(
                         val buffer = ByteArray(len)
                         readBuffer.get(buffer, 0, buffer.size)
                         player?.write(buffer, 0, buffer.size)
+                    } else {
+                        fis = null
                     }
                 }
             }

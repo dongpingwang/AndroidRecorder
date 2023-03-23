@@ -1,0 +1,15 @@
+
+## 1.MediaRecorder进行录音
+// -------------------MediaRecorder-------------------
+private val outputPath by lazy { com.wdp.saver.getDefaultSaveFile(this, "amr") }
+private val audioSource = VOICE_RECOGNITION
+private val sampleRateInHz = 16000
+private val channelConfig = 1
+private val audioFormat = MediaRecorder.OutputFormat.AMR_NB
+private val audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
+private val recorder by lazy {
+    Log.d(TAG, "outputPath: $outputPath")
+    RecorderFactory.newMediaRecorder(
+        audioSource, sampleRateInHz, channelConfig, audioFormat, audioEncoder, outputPath
+    )
+}

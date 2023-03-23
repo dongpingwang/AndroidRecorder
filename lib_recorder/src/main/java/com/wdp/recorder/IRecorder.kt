@@ -19,11 +19,11 @@ interface IRecorder {
 
     fun release(): Boolean
 
-    fun addDataReadListener(dataListener: IDataReadListener): Boolean
+    fun addOnDataReadListener(dataListener: OnDataReadListener): Boolean
 
-    fun removeDataReadListener(dataListener: IDataReadListener): Boolean
+    fun removeOnDataReadListener(dataListener: OnDataReadListener): Boolean
 }
 
-interface IDataReadListener {
+interface OnDataReadListener {
     fun onRead(data: ByteArray)
 }
