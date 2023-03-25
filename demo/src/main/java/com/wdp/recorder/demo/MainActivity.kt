@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.wdp.player.PlayerFactory
 import com.wdp.recorder.OnDataReadListener
 import com.wdp.recorder.RecorderFactory
-import com.wdp.saver.PcmSaver
+import com.wdp.saver.SaverFactory
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         )
     }
 
-    private val saver by lazy { PcmSaver(this) }
-    private val outputPath by lazy { saver.path }
+    private val saver by lazy { SaverFactory.newPcmSaver(this) }
+    private val outputPath by lazy { saver.getPath() }
 
     private val uiHandler by lazy { Handler(Looper.getMainLooper()) }
     private val executor by lazy { Executors.newCachedThreadPool() }

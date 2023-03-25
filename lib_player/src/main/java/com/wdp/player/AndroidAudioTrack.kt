@@ -92,13 +92,17 @@ class AndroidAudioTrack(
 
     override fun registerOnPlayerCompleteListener(listener: OnPlayerCompleteListener): Boolean {
         synchronized(playerCompleteListeners) {
-            return playerCompleteListeners.contains(listener) || playerCompleteListeners.add(listener)
+            return playerCompleteListeners.contains(listener) || playerCompleteListeners.add(
+                listener
+            )
         }
     }
 
     override fun unregisterOnPlayerCompleteListener(listener: OnPlayerCompleteListener): Boolean {
         synchronized(playerCompleteListeners) {
-            return playerCompleteListeners.contains(listener) && playerCompleteListeners.remove(listener)
+            return playerCompleteListeners.contains(listener) && playerCompleteListeners.remove(
+                listener
+            )
         }
     }
 
@@ -116,8 +120,11 @@ class AndroidAudioTrack(
                         readBuffer.get(buffer, 0, buffer.size)
                         player?.write(buffer, 0, buffer.size)
                     } else {
+                        fis?.close()
                         fis = null
                     }
+                }.also {
+                    it.exceptionOrNull()?.printStackTrace()
                 }
             }
         }

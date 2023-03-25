@@ -2,7 +2,6 @@ package com.wdp.saver
 
 import android.content.Context
 import android.util.Log
-import java.io.Closeable
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.Executors
@@ -15,10 +14,9 @@ import java.util.concurrent.Executors
  */
 
 
-class PcmSaver(
-    private val context: Context,
-    val path: String = getDefaultSaveFile(context, "pcm")
-) : Closeable {
+internal class PcmSaver(
+    private val path: String
+) : ISaver {
 
     private val executor by lazy { Executors.newCachedThreadPool() }
 
@@ -28,8 +26,12 @@ class PcmSaver(
 
     private var fos: FileOutputStream? = null
 
-    fun init() {
+    override fun init() {
         Log.d(TAG, "init: $path")
+        deleteExitsFile()
+    }
+
+    private fun deleteExitsFile() {
         kotlin.runCatching {
             executor.execute {
                 val file = File(path)
@@ -37,13 +39,11 @@ class PcmSaver(
                     file.delete()
                     Log.i(TAG, "delete old file")
                 }
-//                val result = file.createNewFile()
-//                Log.i(TAG, "created $path --> $result")
             }
         }.exceptionOrNull()?.printStackTrace()
     }
 
-    fun saveData(data: ByteArray) {
+    override fun saveData(data: ByteArray) {
         kotlin.runCatching {
             executor.execute {
                 if (fos == null) {
@@ -56,6 +56,13 @@ class PcmSaver(
     }
 
     override fun close() {
-        fos?.close()
+        kotlin.runCatching {
+            fos?.close()
+            fos = null
+        }.also {
+            it.exceptionOrNull()?.printStackTrace()
+        }
     }
+
+    override fun getPath(): String = path
 }

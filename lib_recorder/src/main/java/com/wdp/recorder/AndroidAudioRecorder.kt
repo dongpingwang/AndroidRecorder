@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 
 /**
  * 作者：王东平
- * 功能：
+ * 功能：录音
  * 说明：使用AudioRecorder进行录音
  * 版本：1.0.0
  */

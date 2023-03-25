@@ -5,8 +5,8 @@ import android.util.Log
 
 /**
  * 作者：王东平
- * 功能：
- * 说明：
+ * 功能：录音
+ * 说明：使用MediaRecorder进行录音
  * 版本：1.0.0
  */
 internal class AndroidMediaRecorder(
