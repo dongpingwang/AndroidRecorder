@@ -78,21 +78,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnStopRecorder.setOnClickListener(this)
         btnPlay.setOnClickListener(this)
 
-        // todo 耗时
-        tvRecorderState.text = if (recorder.init()) "已初始化" else "初始化失败"
+        executor.execute {
+            recorder.init().also {
+                uiHandler.post {
+                    tvRecorderState.text = if (it) "已初始化" else "初始化失败"
+                }
+            }
+        }
     }
 
     override fun onClick(v: View) {
         if (v == btnStartRecorder) {
-            // todo 耗时
-            tvRecorderState.text = if (recorder.start()) "录音中" else "开始录音失败"
+            executor.execute {
+                recorder.start().also {
+                    uiHandler.post {
+                        tvRecorderState.text = if (it) "录音中" else "开始录音失败"
+                    }
+                }
+            }
         } else if (v == btnStopRecorder) {
-            // todo 耗时
-            tvRecorderState.text = if (recorder.stop()) "结束录音" else "结束录音失败"
+            executor.execute {
+                recorder.stop().also {
+                    uiHandler.post {
+                        tvRecorderState.text = if (it) "结束录音" else "结束录音失败"
+                    }
+                }
+            }
         } else if (v == btnPlay) {
-            player.init()
-            player.setDataSource(outputPath)
-            player.play()
+            executor.execute {
+                player.init()
+                player.setDataSource(outputPath)
+                player.play()
+            }
         }
     }
 }

@@ -24,9 +24,10 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "AndroidRecorder"
+//include ':lib_common'
 include ':lib_recorder'
 include ':lib_player'
 include ':lib_saver'
 
 include ':demo'
-include ':lib_common'
+
