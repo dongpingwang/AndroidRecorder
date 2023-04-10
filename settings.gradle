@@ -28,7 +28,8 @@ include ':lib_common'
 include ':lib_recorder'
 include ':lib_player'
 include ':lib_saver'
-
+include ':lib_oboe_recorder'
+include ':lib_tinycap'
 include ':demo'
 
-include ':nativelib'
+
