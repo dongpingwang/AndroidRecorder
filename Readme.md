@@ -2,7 +2,8 @@
 ## 特点
 - 支持多种录音方式
   - AudioTrack
-  - MediaRecorder 
+  - MediaRecorder
+  - Oboe
 
 - 支持音频保存
   - PCM格式

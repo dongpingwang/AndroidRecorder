@@ -2,11 +2,11 @@ package com.wdp.recorder
 
 /**
  * 作者：王东平
- * 功能：
- * 说明：
+ * 功能：录音
+ * 说明：使用Oboe库进行录音（谷歌推荐，不建议直接使用OpenSL ES 或者AAudio）
  * 版本：1.0.0
  */
-class JniRecorder:IRecorder {
+class OboeRecorder : IRecorder {
     override fun init(): Boolean {
         TODO("Not yet implemented")
     }

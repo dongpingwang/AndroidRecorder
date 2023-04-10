@@ -1,8 +1,8 @@
 package com.wdp.common
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import kotlin.properties.Delegates
 
 /**
  * 作者：王东平
@@ -10,16 +10,35 @@ import kotlin.properties.Delegates
  * 说明：
  * 版本：1.0.0
  */
+@SuppressLint("PrivateApi")
 object XUtils {
 
-    private var sApplication by Delegates.notNull<Application>()
+    private lateinit var sApplication: Application
 
     fun init(application: Application) {
         sApplication = application
     }
 
+    @Synchronized
+    fun getApplication(): Application {
+        if (!this::sApplication.isInitialized) {
+            currentApplication()?.let {
+                sApplication = it
+            }
+        }
+        return sApplication
+    }
 
-    fun getApplication(): Application = sApplication
+    fun getContext(): Context = getApplication().applicationContext
 
-    fun getContext(): Context = sApplication
+    private fun currentApplication(): Application? {
+        return kotlin.runCatching {
+            val activityThread = Class.forName("android.app.ActivityThread")
+            val currentApplication = activityThread.getMethod("currentApplication")
+            currentApplication.isAccessible = true
+            currentApplication.invoke(null, null) as Application
+        }.also {
+            it.exceptionOrNull()?.printStackTrace()
+        }.getOrNull()
+    }
 }
