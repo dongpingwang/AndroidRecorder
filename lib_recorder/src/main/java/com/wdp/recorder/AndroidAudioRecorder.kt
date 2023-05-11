@@ -1,9 +1,11 @@
 package com.wdp.recorder
 
 import android.annotation.SuppressLint
+import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.AudioRecord.RECORDSTATE_RECORDING
 import android.media.AudioRecord.STATE_INITIALIZED
+import android.media.MediaRecorder
 import android.util.Log
 import java.nio.ByteBuffer
 
@@ -15,11 +17,11 @@ import java.nio.ByteBuffer
  * 版本：1.0.0
  */
 internal class AndroidAudioRecorder(
-    private val audioSource: Int,
-    private val sampleRateInHz: Int,
-    private val channelConfig: Int,
-    private val audioFormat: Int,
-    private val bufferSizeInBytes: Int
+//    private val audioSource: Int,
+//    private val sampleRateInHz: Int,
+//    private val channelConfig: Int,
+//    private val audioFormat: Int,
+//    private val bufferSizeInBytes: Int
 ) : IRecorder, Runnable {
 
     companion object {
@@ -32,17 +34,31 @@ internal class AndroidAudioRecorder(
     private val dataListeners = mutableListOf<OnDataReadListener>()
     private val readBuffer by lazy { ByteBuffer.allocate(LEN_READ) }
 
+    private val audioSource = MediaRecorder.AudioSource.MIC
+    private val sampleRateInHz = 16000
+    private val channelIndexMask = getChannelMask(4)
+    private val audioFormat = AudioFormat.ENCODING_PCM_16BIT
+    private val bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRateInHz, AudioFormat.CHANNEL_IN_STEREO, audioFormat) * 10
+    private fun getChannelMask(channelCnt: Int): Int {
+        return 1.shl(channelCnt) - 1
+    }
+
+
     @SuppressLint("MissingPermission")
     override fun init(): Boolean {
         if (recorder == null) {
             return kotlin.runCatching {
-                AudioRecord(
-                    audioSource,
-                    sampleRateInHz,
-                    channelConfig,
-                    audioFormat,
-                    bufferSizeInBytes
-                )
+                AudioRecord.Builder()
+                    .setAudioFormat(
+                        AudioFormat.Builder()
+                            .setSampleRate(sampleRateInHz)
+                            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                            .setChannelIndexMask(channelIndexMask)
+                            .build()
+                    )
+                    .setAudioSource(audioSource)
+                    .setBufferSizeInBytes(2 * bufferSizeInBytes)
+                    .build()
             }.also {
                 recorder = it.getOrNull()
                 if (recorder?.state == STATE_INITIALIZED) {
@@ -53,6 +69,7 @@ internal class AndroidAudioRecorder(
         }
         return true
     }
+
 
     override fun start(): Boolean {
         return kotlin.runCatching {

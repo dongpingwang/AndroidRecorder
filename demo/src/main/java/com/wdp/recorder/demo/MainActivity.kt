@@ -2,12 +2,14 @@ package com.wdp.recorder.demo
 
 import android.media.AudioFormat
 import android.media.AudioFormat.CHANNEL_IN_DEFAULT
+import android.media.AudioFormat.CHANNEL_IN_STEREO
 import android.media.AudioFormat.ENCODING_PCM_16BIT
 import android.media.AudioRecord
 import android.media.MediaRecorder.AudioSource.VOICE_RECOGNITION
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     // -------------------AudioRecorder-------------------
     private val audioSource = VOICE_RECOGNITION
     private val sampleRateInHz = 16000
-    private val channelConfig = AudioFormat.CHANNEL_IN_STEREO
+    private val channelConfig = 4
     private val audioFormat = ENCODING_PCM_16BIT
     private val bufferSizeInBytes =
         AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat)
